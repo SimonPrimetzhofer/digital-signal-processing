@@ -18,7 +18,7 @@ x5 = 5*stepseq(0,-5,20)-6*stepseq(5,-5,20)-3*stepseq(10,-5,20)+5*stepseq(15,-5,2
 function rectImpuls = rect (n, x)
   rectImpuls = (abs(n) <= x);
 end
-n6 = -1:1;
+n6 = -15:15;
 x6 = rect(n6 - 12*-1, 3) + rect(n6 - 12*0, 3) + rect(n6 - 12*1, 3);
 
 function period = per(signal, b)
