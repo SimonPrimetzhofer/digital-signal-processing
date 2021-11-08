@@ -10,13 +10,13 @@ function x = fourier_series(a,b,f0,t)
   for i=1:length(t)
     x(i,1) = a(1)/2;
     for k=1:length(b)
-       x(i,1) += a(k+1)*cos(2*pi*f0*t(i)) + b(k)*sin(2*pi*k*f0*t(i));
+       x(i,1) += a(k+1)*cos(2*pi*k*f0*t(i)) + b(k)*sin(2*pi*k*f0*t(i));
     endfor    
   endfor
 end
 
 f0 = 10;
-fs = f0*1000;0
+fs = f0*1000;
 % -0.05 - 0.05 -> 1. cycle -> 0.05 - 0.15 -> 2. cycle
 t = -0.05:1/fs:0.15;
 
@@ -25,11 +25,8 @@ t = -0.05:1/fs:0.15;
 N = 10;
 
 a = zeros(1,N+1);
-b = zeros(1,N);
-
-for k = 1:N
-  b(1,k) = (-1)^(k-1)/k;
-endfor
+b = (-ones(1,N)).^(0:N-1);
+b = b./(1:N);
 
 y = (-(2/pi)) * fourier_series(a,b,f0,t);
 
@@ -37,11 +34,8 @@ y = (-(2/pi)) * fourier_series(a,b,f0,t);
 N = 100;
  
 a = zeros(1,N+1);
-b = zeros(1,N);
-
-for k = 1:N
-  b(1,k) = (-1)^(k-1)/k;
-endfor
+b = (-ones(1,N)).^(0:N-1);
+b = b./(1:N);
 
 y2 = (-(2/pi)) * fourier_series(a,b,f0,t);
 
@@ -49,11 +43,8 @@ y2 = (-(2/pi)) * fourier_series(a,b,f0,t);
 N = 10000;
  
 a = zeros(1,N+1);
-b = zeros(1,N);
-
-for k = 1:N
-  b(1,k) = (-1)^(k-1)/k;
-endfor
+b = (-ones(1,N)).^(0:N-1);
+b = b./(1:N);
 
 y3 = (-(2/pi)) * fourier_series(a,b,f0,t);
 
