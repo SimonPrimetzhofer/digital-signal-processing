@@ -2,26 +2,38 @@ clear
 close all
 clc 
 
-windowLength = 64;
+pkg load signal
+
+fs = 200;
+f = 50;
+dur = 0.5;
+tt = 0:1/fs:dur-1/fs;
+# create sin with 200 Hz and a duration of 0.5 seconds
+xSin = sin(2 * pi * f * tt);
+
+N_w = 64;
+N_dft = length(xSin);
 fftLength = 2048;
 
-rectWindow = rectwin(windowLength);
-bartlettWindow = bartlett(windowLength);
-hanningWindow = hanning(windowLength);
-blackmanWindow = blackman(windowLength);
+rectWindow = rectwin(N_w);
+bartlettWindow = bartlett(N_w);
+hanningWindow = hann(N_w);
+blackmanWindow = blackman(N_w);
 
-# create sin with 200 Hz and a duration of 0.5 seconds
-duration=0:0.000001:0.5;
-xSin = sin(200 * 2 * pi * duration);
-plot(duration,xSin);
-% transponate sin
+fftRect = fft(rectWindow, fftLength);
+fftBartlett = fft(bartlettWindow, fftLength);
+fftHanning = fft(hanningWindow, fftLength);
+fftBlackman = fft(blackmanWindow, fftLength);
+
+
+% transpose sin
 %xSin = xSin';
 
 % weighted signals
-xSin_rectWindow = xSin.*rectWindow;
-xSin_bartlettWindow = xSin.*bartlettWindow;
-xSin_hanningWindow = xSin.*hanningWindow;
-xSin_blackmanWindow = xSin.*blackmanWindow;
+xSin_rectWindow = xSin .* rectWindow;
+xSin_bartlettWindow = xSin .* bartlettWindow;
+xSin_hanningWindow = xSin .* hanningWindow;
+xSin_blackmanWindow = xSin .* blackmanWindow;
 
 
 % Visualization
@@ -45,19 +57,19 @@ plot(blackmanWindow);
 legend('Blackman');
 
 subplot(345); hold on; grid on;
-plot(fft(rectWindow, fftLength));
+plot(fftRect);
 legend('FFT Rectangular');
 
 subplot(346); hold on; grid on;
-plot(fft(bartlettWindow, fftLength));
+plot(fftBartlett);
 legend('FFT Bartlett');
 
 subplot(347); hold on; grid on;
-plot(fft(hanningWindow, fftLength));
+plot(fftHanning);
 legend('FFT Hann');
 
 subplot(348); hold on; grid on;
-plot(fft(blackmanWindow, fftLength));
+plot(fftBlackman);
 legend('FFT Blackman');
 
 % weighted signals
