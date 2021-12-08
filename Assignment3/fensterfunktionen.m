@@ -7,82 +7,172 @@ pkg load signal
 fs = 200;
 f = 50;
 dur = 0.5;
-tt = 0:1/fs:dur-1/fs;
-# create sin with 200 Hz and a duration of 0.5 seconds
-xSin = sin(2 * pi * f * tt);
+T = 1/fs;
+fvec = T:T:dur;
 
 N_w = 64;
-N_dft = length(xSin);
-fftLength = 2048;
+N = 2048;
+tt = -(-N/2:N/2-1)*pi/N;
 
 rectWindow = rectwin(N_w);
 bartlettWindow = bartlett(N_w);
 hanningWindow = hann(N_w);
 blackmanWindow = blackman(N_w);
 
-fftRect = fft(rectWindow, fftLength);
-fftBartlett = fft(bartlettWindow, fftLength);
-fftHanning = fft(hanningWindow, fftLength);
-fftBlackman = fft(blackmanWindow, fftLength);
+fftRect = 20*log10(abs(fftshift(fft(rectWindow, N))));
+fftBartlett = 20*log10(abs(fftshift(fft(bartlettWindow, N))));
+fftHanning = 20*log10(abs(fftshift(fft(hanningWindow, N))));
+fftBlackman = 20*log10(abs(fftshift(fft(blackmanWindow, N))));
 
+% increase N_w for c)
+N_w2 = 256
+rectWindow2 = rectwin(N_w2);
+bartlettWindow2 = bartlett(N_w2);
+hanningWindow2 = hann(N_w2);
+blackmanWindow2 = blackman(N_w2);
 
-% transpose sin
-%xSin = xSin';
+fftRect2 = 20*log10(abs(fftshift(fft(rectWindow2, N))));
+fftBartlett2 = 20*log10(abs(fftshift(fft(bartlettWindow2, N))));
+fftHanning2 = 20*log10(abs(fftshift(fft(hanningWindow2, N))));
+fftBlackman2 = 20*log10(abs(fftshift(fft(blackmanWindow2, N))));
+
+% create sin with 200 Hz and a duration of 0.5 seconds
+xSin = sin(2 * pi * f * fvec);
+N_sin = length(xSin);
+sinRect = rectwin(N_sin);
+sinBartlett = bartlett(N_sin);
+sinHanning = hann(N_sin);
+sinBlackman = blackman(N_sin);
 
 % weighted signals
-xSin_rectWindow = xSin .* rectWindow;
-xSin_bartlettWindow = xSin .* bartlettWindow;
-xSin_hanningWindow = xSin .* hanningWindow;
-xSin_blackmanWindow = xSin .* blackmanWindow;
+xSin_rectWindow = xSin .* sinRect';
+xSin_bartlettWindow = xSin .* sinBartlett';
+xSin_hanningWindow = xSin .* sinHanning';
+xSin_blackmanWindow = xSin .* sinBlackman';
 
+% value of weighted signals
+fftRectWeighted = 20*log10(abs(fftshift(fft(xSin_rectWindow, N))));
+fftBartlettWeighted = 20*log10(abs(fftshift(fft(xSin_bartlettWindow, N))));
+fftHanningWeighted = 20*log10(abs(fftshift(fft(xSin_hanningWindow, N))));
+fftBlackmanWeighted = 20*log10(abs(fftshift(fft(xSin_blackmanWindow, N))));
 
 % Visualization
-figure;
-subplot(341); hold on; grid on;
+% a)
+figure('name', 'Assignment 3 a) b)');
+subplot(521); hold on; grid on;
 plot(rectWindow);
-legend('Rectangular');
-%xlabel('n');
-%ylabel('x_1[n], x_2[n]');
+title('Rectangular');
+xlabel('Samples');
+ylabel('Amplitude');
 
-subplot(342); hold on; grid on;
+subplot(523); hold on; grid on;
 plot(bartlettWindow);
-legend('Bartlett');
+title('Bartlett');
+xlabel('Samples');
+ylabel('Amplitude');
 
-subplot(343); hold on; grid on;
+subplot(525); hold on; grid on;
 plot(hanningWindow);
-legend('Hann');
+title('Hann');
+xlabel('Samples');
+ylabel('Amplitude');
 
-subplot(344); hold on; grid on;
+subplot(527); hold on; grid on;
 plot(blackmanWindow);
-legend('Blackman');
+title('Blackman');
+xlabel('Samples');
+ylabel('Amplitude');
 
-subplot(345); hold on; grid on;
-plot(fftRect);
-legend('FFT Rectangular');
+% b)
 
-subplot(346); hold on; grid on;
-plot(fftBartlett);
-legend('FFT Bartlett');
+subplot(522); hold on; grid on;
+plot(tt,fftRect);
+title('Rectangular');
+xlabel('\Omega');
+ylabel('Magnitude in dB');
 
-subplot(347); hold on; grid on;
-plot(fftHanning);
-legend('FFT Hann');
+subplot(524); hold on; grid on;
+plot(tt,fftBartlett);
+title('Bartlett');
+xlabel('\Omega');
+ylabel('Magnitude in dB');
 
-subplot(348); hold on; grid on;
-plot(fftBlackman);
-legend('FFT Blackman');
+subplot(526); hold on; grid on;
+plot(tt,fftHanning);
+title('Hann');
+xlabel('\Omega');
+ylabel('Magnitude in dB');
 
+subplot(528); hold on; grid on;
+plot(tt,fftBlackman);
+title('Blackman');
+xlabel('\Omega');
+ylabel('Magnitude in dB');
+
+% d)
 % weighted signals
-subplot(349); hold on; grid on;
-plot(fft(xSin_rectWindow));
-axis([30,70]);
+figure('name', 'Assignment 3 d)');
+subplot(311); hold on; grid on;
+plot(fvec, xSin);
+xlim([0,0.5]);
+xlabel('t in s');
+ylabel('sin(t)');
+title('Sinus f = 50Hz and fs = 200 Hz');
 
-subplot(349); hold on; grid on;
-plot(fft(xSin_bartlettWindow));
+subplot(312); hold on; grid on;
+plot(xSin_bartlettWindow, 'color', 'k');
 
-subplot(349); hold on; grid on;
-plot(fft(xSin_hanningWindow));
+subplot(312); hold on; grid on;
+plot(xSin_hanningWindow, 'color', 'r');
 
-subplot(349); hold on; grid on;
-plot(fft(xSin_blackmanWindow));
+subplot(312); hold on; grid on;
+plot(xSin_blackmanWindow, 'color', 'g');
+
+subplot(312); hold on; grid on;
+plot(xSin_blackmanWindow, 'color', 'b');
 legend('Weighted Rectangular', 'Weighted Bartlett', 'Weighted Hanning', 'Weighted Blackman');
+xlabel('Samples');
+ylabel('Amplitude');
+title('Weighted windows with sinus');
+
+subplot(313); hold on; grid on;
+plot(tt,fftRectWeighted, 'color', 'k');
+
+subplot(313); hold on; grid on;
+plot(tt,fftBartlettWeighted, 'color', 'r');
+
+subplot(313); hold on; grid on;
+plot(tt,fftHanningWeighted, 'color', 'g');
+
+subplot(313); hold on; grid on;
+plot(tt,fftBlackmanWeighted, 'color', 'b');
+legend('Weighted Rectangular', 'Weighted Bartlett', 'Weighted Hanning', 'Weighted Blackman');
+xlabel('\Omega');
+ylabel('Magnitude in dB');
+title('Value of weighted windows');
+
+% c)
+figure('name', 'Assignment 3 c)');
+subplot(411); hold on; grid on;
+plot(tt,fftRect2);
+title('Rectangular');
+xlabel('\Omega');
+ylabel('Magnitude in dB');
+
+subplot(412); hold on; grid on;
+plot(tt,fftBartlett2);
+title('Bartlett');
+xlabel('\Omega');
+ylabel('Magnitude in dB');
+
+subplot(413); hold on; grid on;
+plot(tt,fftHanning2);
+title('Hann');
+xlabel('\Omega');
+ylabel('Magnitude in dB');
+
+subplot(414); hold on; grid on;
+plot(tt,fftBlackman2);
+title('Blackman');
+xlabel('\Omega');
+ylabel('Magnitude in dB');
