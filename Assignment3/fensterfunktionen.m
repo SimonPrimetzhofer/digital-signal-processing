@@ -14,10 +14,10 @@ N_w = 64;
 N = 2048;
 tt = -(-N/2:N/2-1)*pi/N;
 
-rectWindow = rectwin(N_w);
-bartlettWindow = bartlett(N_w);
-hanningWindow = hann(N_w);
-blackmanWindow = blackman(N_w);
+rectWindow = rectwin(N_w)'/N_w;
+bartlettWindow = bartlett(N_w)'/sum(bartlett(N_w));
+hanningWindow = hann(N_w)'/sum(hann(N_w));
+blackmanWindow = blackman(N_w)'/sum(blackman(N_w));
 
 fftRect = 20*log10(abs(fftshift(fft(rectWindow, N))));
 fftBartlett = 20*log10(abs(fftshift(fft(bartlettWindow, N))));
@@ -26,10 +26,10 @@ fftBlackman = 20*log10(abs(fftshift(fft(blackmanWindow, N))));
 
 % increase N_w for c)
 N_w2 = 256
-rectWindow2 = rectwin(N_w2);
-bartlettWindow2 = bartlett(N_w2);
-hanningWindow2 = hann(N_w2);
-blackmanWindow2 = blackman(N_w2);
+rectWindow2 = rectwin(N_w2)'/N_w2;
+bartlettWindow2 = bartlett(N_w2)'/sum(bartlett(N_w2));
+hanningWindow2 = hann(N_w2)'/sum(hann(N_w2));
+blackmanWindow2 = blackman(N_w2)'/sum(blackman(N_w2));
 
 fftRect2 = 20*log10(abs(fftshift(fft(rectWindow2, N))));
 fftBartlett2 = 20*log10(abs(fftshift(fft(bartlettWindow2, N))));
