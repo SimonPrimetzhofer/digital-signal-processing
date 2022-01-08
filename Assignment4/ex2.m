@@ -26,12 +26,17 @@ X = fft(xb, L);
 nr = length(xb)/L;
 
 for k = 1:nr
+   % M1 = L samples werden aus xb genommen 
    M1(k,:) = xb(((k-1) * L+1):k * L);
+   % M2 = es werden noch Länge von H - 1 Nullen angehängt
    M2(k,:) = [M1(k,:) zeros(1, lh-1)];
+   % M3 = Multiplikation + Ausgangssignal mit ifft holen
    M3(k,:) = ifft(fft(M2(k,:)) .* fft(hb));
+   % M4 wird für die Spaltenweise Addierung generier
    M4(k,:) = [zeros(1, (k-1)*L) M3(k,:) zeros(1, (nr-k) * L)];
 end
 
+% Zusammenrechnen der Spalten
 z = sum(M4);
 
 % f)
