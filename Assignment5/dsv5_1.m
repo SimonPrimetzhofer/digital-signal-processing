@@ -15,8 +15,8 @@ fs = 20e3;                          % sampling frequency
 %--- tolerance scheme
 f_pass = 3.4e3;                     % passband cutoff frequency
 f_stop = 4e3;                       % stopband cutoff frequency
-Omega_pass = 20*log10(abs(2*pi*f_pass/fs));  	                % passband cutoff radian frequency
-Omega_stop = 20*log10(abs(2*pi*f_stop/fs));   	            % stopband cutoff radian frequency
+Omega_pass = 2*pi*f_pass/fs;  	                % passband cutoff radian frequency
+Omega_stop = 2*pi*f_stop/fs;   	            % stopband cutoff radian frequency
 
 Delta_1 = 0.05;  			        % passband tolerance
 Delta_2 = 10^(-45/20); 			            % stopband tolerance (20 log(Delta_2) = -45 dB
